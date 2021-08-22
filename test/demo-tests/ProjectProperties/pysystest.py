@@ -1,3 +1,12 @@
+__pysys_title__   = r""" Demo of getting project properties """
+#                        ===============================================================================
+
+__pysys_purpose__ = r""" 
+	"""
+
+__pysys_authors__ = "pysysuser"
+__pysys_created__ = "1999-12-31"
+
 import pysys
 from pysys.constants import *
 
@@ -11,6 +20,8 @@ class PySysTest(pysys.basetest.BaseTest):
 		# Example of using a project property for a username+password combination
 		username, password = self.project.myCredentials.split(':')
 		self.log.info('Using username=%s and password=%s', username, password)
+
+		self.log.info('Using logConfigURL=%s', self.project.logConfigURL)
 
 	def validate(self):
 		# Demo of how to get the value of a property with a string value

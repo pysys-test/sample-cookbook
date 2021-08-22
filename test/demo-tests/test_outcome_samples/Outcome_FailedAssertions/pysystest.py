@@ -1,3 +1,12 @@
+__pysys_title__   = r""" Demo of outcomes - FAILED assertions """
+#                        ===============================================================================
+
+__pysys_purpose__ = r""" 
+	"""
+
+__pysys_authors__ = "pysysuser"
+__pysys_created__ = "1999-12-31"
+
 import pysys
 from pysys.constants import *
 
@@ -18,6 +27,9 @@ class PySysTest(pysys.basetest.BaseTest):
 		# assertGrep is good for checking errors aren't present, or positively for checking that an expression is 
 		# present but you don't care where.
 		self.assertGrep('my_server.out', r' (ERROR|FATAL|WARN) .*', contains=False)
+		self.assertGrep('my_server.out', r'Traceback \(most recent call last\)', contains=False, 
+			mappers=[pysys.mappers.JoinLines.PythonTraceback()])
+
 		self.assertGrep('sensorValues.out', r'"timestamp": ".+"') # contains some timestamp, don't care what or where
 
 		# Advanced: regular expression escaping can be tricky. Backslashes can be handled with r'...' strings, but 
@@ -50,7 +62,7 @@ class PySysTest(pysys.basetest.BaseTest):
 			None,
 			123.4,
 		])
-		# Sorting and filtering can be used to remove anomolies that you don't care about and ensure tests are reliable.
+		# Sorting and filtering can be used to remove anomalies that you don't care about and ensure tests are reliable.
 		self.assertThat('measurements == expected', measurements=sorted(m for m in sensorValuesData.get('measurements') if m is not None), 
 			expected=[
 				10/3.0,

@@ -1,3 +1,20 @@
+__pysys_title__   = r""" Demo of outcomes - INSPECT .svg charts from performance testing """
+#                        ===============================================================================
+
+__pysys_purpose__ = r""" Demonstrates how the INSPECT outcome prevents output files being purged (even with the --purge flag), 
+	and how extra test artifacts can be collected based on filename using a writer (nb: this doesn't require 
+	an INSPECT outcome, and in fact is often used instead of INSPECT), and how performance results can be logged.
+	"""
+
+__pysys_authors__ = "pysysuser"
+__pysys_created__ = "1999-12-31"
+
+__pysys_groups__           = "performance, disableCoverage; inherit=true"
+__pysys_modes__            = r""" lambda helper: helper.inheritedModes+[
+	# For now we run this test in just one mode, but could add additional modes if desired.
+	{'mode':'CompressionGZip'}
+	] """
+
 import pysys
 from pysys.constants import *
 
@@ -14,18 +31,18 @@ class PySysTest(pysys.basetest.BaseTest):
 		
 		self.logFileContents('http_perf_client.out', includes=['Completed .+response iterations.+'])
 		
-		# Use getExprFromFile to extract the data we need to calculate the throughput rate, with a regular expression.
-		actualIterations, timeSecs = self.getExprFromFile('http_perf_client.out', 
-			'Completed (.*) response iterations in (.*) seconds', groups=[1, 2])
+		# Use grep to extract the data we need to calculate the throughput rate, with a regular expression.
+		actualIterations = self.grep('http_perf_client.out', 'Completed (.*) response iterations')
+		timeSecs = float(self.grep('http_perf_client.out', 'Completed .* response iterations in (.*) seconds'))
 		
 		# Now we call reportPerformanceResult to report the main performance numbers in a CSV file, for later analysis 
 		# and comparison between versions. 
 		# It's best to report "rates" rather than the total time taken, so that we can tweak the iteration count later 
 		# if needed to get more stable numbers. 
-		self.reportPerformanceResult(int(actualIterations.replace(',',''))/float(timeSecs), 
+		self.reportPerformanceResult(int(actualIterations.replace(',',''))/timeSecs, 
 			# Each performance result is identified by a short string that uniquely identifies it. Make sure this 
 			#   includes information about what mode it's running in and what this test does so that there's no need to 
-			#   cross-reference the run.py/pysystest.xml files to understand what it's doing. 
+			#   cross-reference the pysystest.* files to understand what it's doing. 
 			# The unit is usually one of the predefined strings - "/s" (=per second; biggerIsBetter=True) for rates, 
 			# or "ns" (=nanoseconds; biggerIsBetter=False) for small time values such as latencies; 
 			# alternatively pass an instance of PerformanceUnit instance if you want custom units.  
@@ -34,7 +51,7 @@ class PySysTest(pysys.basetest.BaseTest):
 		# Extract all the latency values, convert to nanoseconds (which is the recommended units for sub-second 
 		# values), and sort them so we can calculate the median.
 		nsLatencies = sorted([float(latency)*(1000*1000*1000) for latency in 
-			self.getExprFromFile('http_perf_client.out', 'Response latency sample: (.*) seconds', returnAll=True)])
+			self.grepAll('http_perf_client.out', 'Response latency sample: (.*) seconds')])
 
 		self.reportPerformanceResult(nsLatencies[len(nsLatencies)//2], 
 			# Put the key information at the start of the string so it's easy to read when this string is sorted 
