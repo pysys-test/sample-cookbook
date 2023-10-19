@@ -1,0 +1,15 @@
+2023-07-27 11:26:48,722 INFO  ==============================================================
+2023-07-27 11:26:48,723 INFO  Id:    PySysTestXMLDescriptorSample~CompressionNone_Auth=None_Usage
+2023-07-27 11:26:48,724 INFO  Title: My foobar tool - Argument parsing success and error cases
+2023-07-27 11:26:48,727 INFO  Dir:   C:\dev\pysys\samples\cookbook\test\demo-tests\PySysTestXMLDescriptorSample
+2023-07-27 11:26:48,727 DEBUG Execution order hint: 100.0
+2023-07-27 11:26:48,727 INFO  ==============================================================
+2023-07-27 11:26:48,727 DEBUG Disabling coverage for this test due to disableCoverage group
+2023-07-27 11:26:48,728 INFO  This test is skipped until Bug-1234 is fixed ... skipped
+2023-07-27 11:26:48,728 DEBUG --- test cleanup
+2023-07-27 11:26:48,728 DEBUG ProcessUser cleanup function done.
+2023-07-27 11:26:48,728 INFO  
+2023-07-27 11:26:48,729 INFO  Test duration: 0.01 secs
+2023-07-27 11:26:48,729 INFO  Test final outcome:  SKIPPED
+2023-07-27 11:26:48,729 INFO  Test outcome reason: This test is skipped until Bug-1234 is fixed
+2023-07-27 11:26:48,729 INFO  
